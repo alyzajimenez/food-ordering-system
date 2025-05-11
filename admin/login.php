@@ -19,7 +19,9 @@ if (isset($_SESSION['user_id'])) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $role = $_POST['role'];  // 'customer' or 'admin'
+
+    // Hardcode the role as 'admin'
+    $role = 'admin';
 
     // Authenticate user based on role
     $user = authenticate_user($email, $password, $role);
@@ -30,15 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['email'] = $user['email'];
         $_SESSION['role'] = $user['role'];
 
-        // Redirect based on role
-        if ($user['role'] == 'admin') {
-            header('Location: ../admin/index.php');  // Admin dashboard
-        } else {
-            header('Location: ../customer/index.php');  // Customer dashboard
-        }
+        // Redirect to admin dashboard
+        header('Location: ../admin/index.php');
         exit();
     } else {
-        $error_message = "Invalid email or password.";
+        $error_message = "Invalid email or password, or you are not authorized to log in.";
     }
 }
 ?>
@@ -50,15 +48,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="../assets/style.css">
+    <script>
+        // Function to display an alert if there's an error message
+        function showError(message) {
+            if (message) {
+                alert(message);
+            }
+        }
+    </script>
 </head>
-<body>
+<body onload="showError('<?php echo isset($error_message) ? addslashes($error_message) : ''; ?>')">
 
     <div class="login-container">
         <h2>Login</h2>
-
-        <?php if (isset($error_message)) { ?>
-            <div class="error-message"><?php echo $error_message; ?></div>
-        <?php } ?>
 
         <!-- Login form -->
         <form action="login.php" method="POST">
@@ -67,12 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             <label for="password">Password</label>
             <input type="password" name="password" required>
-
-            <label for="role">Role</label>
-            <select name="role" required>
-                <option value="customer">Customer</option>
-                <option value="admin">Admin</option>
-            </select>
 
             <button type="submit">Login</button>
         </form>

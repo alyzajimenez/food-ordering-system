@@ -1,44 +1,14 @@
-<?php
-session_start();
-
-include('../includes/db.php');
-
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'customer') {
-    header('Location: login.php');
-    exit();
-}
-
-$user_id = $_SESSION['user_id'];
-$email = $_SESSION['email'];
-
-$query = "SELECT * FROM users WHERE user_id = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Dashboard</title>
-    <style>
-/* Global Styles */
-body {
-    background-size: cover;
-    background-position: center;
-    min-height: 100vh;
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    color: #333;
-    display: flex;
-    flex-direction: row; 
-    overflow-x: hidden; 
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Meal For Your Ingredients</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<style>
+
 /* Sidebar */
 .sidebar {
     width: 250px; 
@@ -149,9 +119,25 @@ header h2 {
     }
 }
 
-    </style>
+</style>
 </head>
 <body>
+
+  <div class="container">
+    <div class="meal-wrapper">
+      <div class="meal-search">
+        <h2 class="title">Find Meals For Your Ingredients</h2>
+        <blockquote>Real food doesn't have ingredients, real food is ingredients.<br>
+          <cite>- Jamie Oliver</cite>
+        </blockquote>
+
+        <div class="meal-search-box">
+          <input type="text" class="search-control" placeholder="Enter an ingredient" id="search-input">
+          <button type="submit" class="search-btn btn" id="search-btn">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
 
  <div class="container">
     <nav class="sidebar">
@@ -187,28 +173,24 @@ header h2 {
             </ul>
         </nav>
 
- <main class="main-content">
-    <header>
-        <h2>Welcome, <?php echo htmlspecialchars($user['email']); ?>!</h2>
-    </header>
-
-    <section id="main-message">
-        <h3>Hungry? Let the Tiger Deliver!</h3>
-        <p>Browse menus, order in minutes, and enjoy food delivered right to your door.</p>
-    </section>
-    
-     <!-- Image Section -->
-    <section id="image-gallery">
-        <div class="image-container">
-            <img src="../assets/images/burger.png" alt="Image 1" class="image-item">
-            <img src="../assets/images/pizza.png" alt="Image 2" class="image-item">
-            <img src="../assets/images/fries.png" alt="Image 3" class="image-item">
-            <img src="../assets/images/chicken.png" alt="Image 4" class="image-item">
+      <div class="meal-result">
+        <h2 class="title">Your Search Results:</h2>
+        <div id="meal">
+          <!-- Results injected via JavaScript -->
         </div>
-    </section>
-</main>
+      </div>
 
+      <div class="meal-details">
+        <button type="button" class="btn recipe-close-btn" id="recipe-close-btn">
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="meal-details-content">
+          <!-- Meal Details injected via JavaScript -->
+        </div>
+      </div>
     </div>
+  </div>
 
+  <script src="script.js"></script>
 </body>
 </html>

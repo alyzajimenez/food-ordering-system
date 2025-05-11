@@ -1,58 +1,50 @@
 <?php
-// Start the session
 session_start();
 
-// Include database connection and functions
 include('../includes/db.php');
 
-// Check if the user is already logged in (for redirects)
+
 if (isset($_SESSION['user_id'])) {
-    // Redirect to the appropriate dashboard based on role
     if ($_SESSION['role'] == 'admin') {
         header('Location: ../admin/index.php');
     } else {
-        header('Location: ../customer/index.php');
+        header('Location: ../customer/index.php');  // Customer dashboard
     }
     exit();
 }
 
-$error_message = ''; // Error message initialization
+$error_message = ''; 
 
-// Handle form submission
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $role = $_POST['role'];  // 'customer' or 'admin'
 
-    // Debugging: Print the POST data to see what's being sent
-    echo "Email: " . htmlspecialchars($email) . "<br>";
-    echo "Role: " . htmlspecialchars($role) . "<br>";
 
-    // Prepare and execute query to find the user by email and role
     $query = "SELECT * FROM users WHERE email = ? AND role = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("ss", $email, $role);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Check if the user exists and verify the password
+
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
-        // Debugging: Check the user data fetched
-        echo "User Found: <br>";
-        print_r($user);
-        echo "<br>";
-
-        // Check if the password is correct
-        if ($password == $user['password']) {  // Not using hashing for simplicity
-            // Set session variables
+      
+        if ($password == $user['password']) { 
+           
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['email'] = $user['email'];
             $_SESSION['role'] = $user['role'];
 
-            // Redirect to the appropriate dashboard
-            if ($user['role'] == 'admin') {
+            echo '<pre>';
+            print_r($_SESSION);  
+            echo '</pre>';
+
+
+            if ($_SESSION['role'] == 'admin') {
                 header('Location: ../admin/index.php');  // Admin dashboard
             } else {
                 header('Location: ../customer/index.php');  // Customer dashboard
@@ -80,12 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="login-container">
         <h2>Login</h2>
 
-        <!-- Display error message if any -->
+  
         <?php if ($error_message): ?>
             <div class="error-message"><?php echo $error_message; ?></div>
         <?php endif; ?>
 
-        <!-- Login form -->
+       
         <form action="login.php" method="POST">
             <label for="email">Email</label>
             <input type="email" name="email" required>

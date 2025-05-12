@@ -172,7 +172,7 @@ header h2 {
                 </a>
             </li>
             <li>
-                <a href="#cart">
+                <a href="cart.php">
                     <i class="fas fa-shopping-cart nav-icon"></i> 
                     Cart
                 </a>

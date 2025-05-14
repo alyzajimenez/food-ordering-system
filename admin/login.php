@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Admin Login</title>
     <link rel="stylesheet" href="../assets/style.css">
     <script>
         // Function to display an alert if there's an error message
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body onload="showError('<?php echo isset($error_message) ? addslashes($error_message) : ''; ?>')">
 
     <div class="login-container">
-        <h2>Login</h2>
+        <h2>Admin Login</h2>
 
         <!-- Login form -->
         <form action="login.php" method="POST">

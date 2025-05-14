@@ -68,6 +68,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="error-message"><?php echo htmlspecialchars($error_message); ?></div>
         <?php endif; ?>
 
+        <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
+            <div class="alert alert-success" role="alert">
+                Registration successful! Please log in.
+            </div>
+        <?php endif; ?>
+
         <form action="login.php" method="POST">
             <label for="email">Email</label>
             <input type="email" name="email" required>

@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if ($insert_stmt->execute()) {
                 // Registration successful, redirect to login page
-                header('Location: login.php');
+                header('Location: login.php?success=1');
                 exit();
             } else {
                 $error_message = "Error during registration. Please try again later.";

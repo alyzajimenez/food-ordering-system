@@ -72,3 +72,24 @@ function mealRecipeModal(meal){
     mealDetailsContent.innerHTML = html;
     mealDetailsContent.parentElement.classList.add('showRecipe');
 }
+
+// Additional: Order Now feature
+let orders = [];
+
+document.addEventListener('click', function(e){
+    if(e.target && e.target.classList.contains('order-btn')){
+        e.preventDefault();
+        const mealItem = e.target.closest('.meal-item');
+        if(mealItem){
+            const id = mealItem.dataset.id;
+            const name = mealItem.querySelector('h3')?.textContent || 'Unnamed Meal';
+            const img = mealItem.querySelector('img')?.src || '';
+
+            const order = { id, name, img };
+            orders.push(order);
+
+            alert(`"${name}" has been added to your order!`);
+            console.log('Current Orders:', orders);
+        }
+    }
+});

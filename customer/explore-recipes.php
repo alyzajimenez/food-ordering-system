@@ -152,13 +152,13 @@ header h2 {
                 </a>
             </li>
             <li>
-                <a href="#order-history">
+                <a href="order-history.php">
                     <i class="fas fa-history nav-icon"></i> 
                     Order History
                 </a>
             </li>
             <li>
-                <a href="#cart">
+                <a href="cart.php">
                     <i class="fas fa-shopping-cart nav-icon"></i> 
                     Cart
                 </a>

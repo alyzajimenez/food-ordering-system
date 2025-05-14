@@ -18,15 +18,13 @@ $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="../assets/style.css">
+  <meta charset="UTF-8">
+  <title>Admin - Order History</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
     <style>
         /* Global Styles */
         body {
@@ -152,8 +150,9 @@ $user = $result->fetch_assoc();
         }
     </style>
 </head>
-<body>
-    <div class="container">
+<body class="p-4">
+  <div class="container">
+    <!--sidebar-->
         <nav class="sidebar">
             <a href="index.php">
                 <img src="../assets/images/logo.png" alt="Food Tiger Logo" class="logo">
@@ -189,26 +188,35 @@ $user = $result->fetch_assoc();
             </ul>
         </nav>
 
-        <main class="main-content">
-            <header>
-                <h2>Welcome, <?php echo htmlspecialchars($user['email']); ?>!</h2>
-            </header>
+    <main class="main-content">
+    <h2>Order History</h2>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="historyTable"></tbody>
+    </table>
+  </div>
 
-            <section id="main-message">
-                <h3>Hungry? Let the Tiger Deliver!</h3>
-                <p>Browse menus, order in minutes, and enjoy food delivered right to your door.</p>
-            </section>
-
-            <!-- Image Section -->
-            <section id="image-gallery">
-                <div class="image-container">
-                    <img src="../assets/images/burger.png" alt="Image 1" class="image-item">
-                    <img src="../assets/images/pizza.png" alt="Image 2" class="image-item">
-                    <img src="../assets/images/fries.png" alt="Image 3" class="image-item">
-                    <img src="../assets/images/chicken.png" alt="Image 4" class="image-item">
-                </div>
-            </section>
-        </main>
-    </div>
+  <script>
+    fetch('../api/admin/history.php')
+      .then(res => res.json())
+      .then(data => {
+        const table = document.getElementById('historyTable');
+        data.history.forEach(order => {
+          table.innerHTML += `
+            <tr>
+                <td>${order.id}</td>
+                <td>${order.customer_name}</td>
+                <td>${order.items}</td>
+                <td>₱${order.total}</td>
+                <td>${order.created_at}</td>
+            </tr>
+            `;
+        });
+      });
+  </script>
 </body>
 </html>

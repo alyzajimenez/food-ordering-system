@@ -1,32 +1,24 @@
 <?php
-// Start the session
 session_start();
 
-// Include database connection and utility functions
 include('../includes/db.php');
 include('../includes/functions.php');
 
-// Check if the user is already logged in (for redirects)
 if (isset($_SESSION['user_id'])) {
-    // If logged in, redirect to the appropriate dashboard
     header('Location: ../customer/index.php');
     exit();
 }
 
 $error_message = '';
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get form data
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // Validate password match
     if ($password !== $confirm_password) {
         $error_message = "Passwords do not match.";
     } else {
-        // Check if the email already exists in the database
         $query = "SELECT * FROM users WHERE email = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("s", $email);
@@ -36,16 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($result->num_rows > 0) {
             $error_message = "Email already exists.";
         } else {
-            // Insert new user into the database
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT); // Hash the password
-            $role = 'customer'; // Default role for registration
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $role = 'customer';
 
             $insert_query = "INSERT INTO users (email, password, role) VALUES (?, ?, ?)";
             $insert_stmt = $conn->prepare($insert_query);
             $insert_stmt->bind_param("sss", $email, $hashed_password, $role);
 
             if ($insert_stmt->execute()) {
-                // Registration successful, redirect to login page
                 header('Location: login.php?success=1');
                 exit();
             } else {
@@ -62,16 +52,116 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customer Registration</title>
-    <link rel="stylesheet" href="../assets/style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #ffecd2, #fcb69f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .register-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .logo-container img {
+            width: 100px; /* Adjust size as needed */
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 95%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #fcb69f;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background-color: #e67e22;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #cf711f;
+        }
+
+        .error-message {
+            background-color: #ffdddd;
+            border: 1px solid #ff5c5c;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            color: #a94442;
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        a {
+            color: #e67e22;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
     <div class="register-container">
+        <div class="logo-container">
+            <img src="../assets/images/logo.png" alt="Logo"> <!-- Replace with your logo path -->
+        </div>
+
         <h2>Customer Registration</h2>
 
-        <?php if ($error_message) { ?>
-            <div class="error-message"><?php echo $error_message; ?></div>
-        <?php } ?>
+        <?php if ($error_message): ?>
+            <div class="error-message"><?php echo htmlspecialchars($error_message); ?></div>
+        <?php endif; ?>
 
         <form action="register.php" method="POST">
             <label for="email">Email</label>

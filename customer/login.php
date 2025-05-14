@@ -7,7 +7,7 @@ if (isset($_SESSION['user_id'])) {
     if ($_SESSION['role'] == 'admin') {
         header('Location: ../admin/index.php');
     } else {
-        header('Location: ../customer/index.php');  // Customer dashboard
+        header('Location: ../customer/index.php');
     }
     exit();
 }
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['role'] = $user['role'];
 
-                header('Location: ../customer/index.php');  // Customer dashboard
+                header('Location: ../customer/index.php');
                 exit();
             } else {
                 $_SESSION['error_message'] = 'Admins cannot log in from this page. Please use the admin login page.';
@@ -57,11 +57,120 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="../assets/style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right,rgb(233, 141, 3), #ACB6E5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .logo-container img {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 95%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #74ebd5;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            background-color: #4A90E2;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #357ABD;
+        }
+
+        .error-message {
+            background-color: #ffdddd;
+            border: 1px solid #ff5c5c;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            color: #a94442;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            color: #155724;
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        a {
+            color: #4A90E2;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
     <div class="login-container">
+        <div class="logo-container">
+            <img src="../assets/images/logo.png" alt="Logo">
+        </div>
+
         <h2>Login</h2>
 
         <?php if (!empty($error_message)): ?>
@@ -69,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php endif; ?>
 
         <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
-            <div class="alert alert-success" role="alert">
+            <div class="alert-success">
                 Registration successful! Please log in.
             </div>
         <?php endif; ?>

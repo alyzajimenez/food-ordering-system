@@ -186,7 +186,7 @@ $user = $result->fetch_assoc();
         <h2>Manage Menu</h2>
 
         <!-- Add menu form -->
-        <form id="menuForm" class="row g-3 my-4">
+        <form id="menuForm" class="row g-3 my-4" enctype="multipart/form-data">
             <input type="hidden" id="menuId" name="menu_id">
 
             <div class="col-md-3">
@@ -200,6 +200,9 @@ $user = $result->fetch_assoc();
             </div>
             <div class="col-md-2">
                 <input type="text" id="category" name="category" class="form-control" placeholder="Category" required>
+            </div>
+            <div class="col-md-3">
+                <input type="file" id="image" name="image" class="form-control" accept="image/*">
             </div>
             <div class="col-md-2">
                 <select id="availability" name="availability" class="form-select" required>
@@ -216,7 +219,7 @@ $user = $result->fetch_assoc();
         <table class="table table-bordered">
         <thead>
             <tr>
-            <th>Name</th><th>Description</th><th>Price</th><th>Category</th><th>Available</th><th>Actions</th>
+            <th>Name</th><th>Description</th><th>Price</th><th>Category</th><th>Image</th><th>Available</th><th>Actions</th>
             </tr>
         </thead>
         <tbody id="menuTable"></tbody>
@@ -239,6 +242,9 @@ $user = $result->fetch_assoc();
                 <td>${item.description}</td>
                 <td>₱${item.price}</td>
                 <td>${item.category}</td>
+                <td>
+                    ${item.image ? `<img src="/api/assets/menu/${item.image}" width="50" height="50">` : 'No Image'}
+                </td>
                 <td>${item.availability == 1 ? 'Yes' : 'No'}</td>
                 <td>
                   <button class="btn btn-warning btn-sm" onclick="editItem(${item.menu_id}, '${item.name}', '${item.description}', ${item.price}, '${item.category}', ${item.availability})">Edit</button>
@@ -254,23 +260,17 @@ $user = $result->fetch_assoc();
         e.preventDefault();
 
         const menuId = form.menu_id.value;
-        const data = {
-            name: form.name.value,
-            description: form.description.value,
-            price: parseFloat(form.price.value),
-            category: form.category.value,
-            availability: parseInt(form.availability.value),
-            action: menuId ? 'update' : 'add' 
-        };
+        const formData = new FormData(form);
+
+        formData.append('action', menuId ? 'update' : 'add');
 
         if (menuId) {
-            data.menu_id = parseInt(menuId);
+            formData.append('menu_id', menuId);
         }
 
         fetch('../api/admin/menu.php', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: formData,
         })
         .then(res => res.json())
         .then(res => {
@@ -281,7 +281,6 @@ $user = $result->fetch_assoc();
         })
         .catch(err => console.error('Error:', err));
     });
-
 
     function deleteItem(id) {
         if (confirm("Are you sure you want to delete this menu item?")) {

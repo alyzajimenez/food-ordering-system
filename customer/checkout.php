@@ -27,12 +27,17 @@ if (empty($cart)) {
         <tr><td colspan="3">Total</td><td><strong>₱<?= $total ?></strong></td></tr>
     </table>
 
-    <h3>Customer Info</h3>
-    <label>Name</label><br>
-    <input type="text" name="customer_name" required><br>
+<h3>Customer Info</h3>
 
-    <label>Address</label><br>
-    <textarea name="address" required></textarea><br><br>
+<label>Name</label><br>
+<input type="text" name="customer_name" required><br>
 
-    <button type="submit">Place Order</button>
+<label>Mobile Number</label><br>
+<input type="tel" name="mobile_number" pattern="09[0-9]{9}" placeholder="e.g. 09123456789" required><br>
+
+<label>Address</label><br>
+<textarea name="address" required></textarea><br><br>
+
+<button type="submit">Place Order</button>
+
 </form>

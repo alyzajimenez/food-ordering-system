@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['menu_id'])) {
             'menu_id' => $menu_id,
             'menu_name' => $menuItem['name'],
             'price' => $menuItem['price'],
+            'image' => $menuItem['image'],
             'quantity' => ($_SESSION['cart'][$menu_id]['quantity'] ?? 0) + $quantity
         ];
     }
@@ -205,6 +206,9 @@ header h2 {
                     <?php foreach ($items as $item): ?>
                         <li style="margin-bottom: 20px; border: 1px solid #ccc; padding: 15px; border-radius: 10px;">
                             <form method="POST" style="margin: 0;">
+                                <?php if (!empty($item['image'])): ?>
+                                    <img src="../api/assets/menu/<?= htmlspecialchars($item['image']) ?>" alt="Menu image" style="max-width: 200px; height: auto; display: block; margin-bottom: 10px;">
+                                <?php endif; ?>
                                 <h3><?= htmlspecialchars($item['name']) ?></h3>
                                 <p><?= htmlspecialchars($item['description']) ?></p>
                                 <p>Price: ₱<?= number_format($item['price'], 2) ?></p>

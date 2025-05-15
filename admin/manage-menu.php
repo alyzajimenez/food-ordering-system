@@ -177,12 +177,6 @@ $user = $result->fetch_assoc();
                     </a>
                 </li>
                 <li>
-                    <a href="#cart">
-                        <i class="fas fa-shopping-cart nav-icon"></i>
-                        Manage Customer Cart
-                    </a>
-                </li>
-                <li>
                     <a href="logout.php">Logout</a>
                 </li>
             </ul>
@@ -192,7 +186,7 @@ $user = $result->fetch_assoc();
         <h2>Manage Menu</h2>
 
         <!-- Add menu form -->
-        <form id="menuForm" class="row g-3 my-4">
+        <form id="menuForm" class="row g-3 my-4" enctype="multipart/form-data">
             <input type="hidden" id="menuId" name="menu_id">
 
             <div class="col-md-3">
@@ -206,6 +200,9 @@ $user = $result->fetch_assoc();
             </div>
             <div class="col-md-2">
                 <input type="text" id="category" name="category" class="form-control" placeholder="Category" required>
+            </div>
+            <div class="col-md-3">
+                <input type="file" id="image" name="image" class="form-control" accept="image/*">
             </div>
             <div class="col-md-2">
                 <select id="availability" name="availability" class="form-select" required>
@@ -222,7 +219,7 @@ $user = $result->fetch_assoc();
         <table class="table table-bordered">
         <thead>
             <tr>
-            <th>Name</th><th>Description</th><th>Price</th><th>Category</th><th>Available</th><th>Actions</th>
+            <th>Name</th><th>Description</th><th>Price</th><th>Category</th><th>Image</th><th>Available</th><th>Actions</th>
             </tr>
         </thead>
         <tbody id="menuTable"></tbody>
@@ -245,6 +242,9 @@ $user = $result->fetch_assoc();
                 <td>${item.description}</td>
                 <td>₱${item.price}</td>
                 <td>${item.category}</td>
+                <td>
+                    ${item.image ? `<img src="/api/assets/menu/${item.image}" width="50" height="50">` : 'No Image'}
+                </td>
                 <td>${item.availability == 1 ? 'Yes' : 'No'}</td>
                 <td>
                   <button class="btn btn-warning btn-sm" onclick="editItem(${item.menu_id}, '${item.name}', '${item.description}', ${item.price}, '${item.category}', ${item.availability})">Edit</button>
@@ -258,38 +258,29 @@ $user = $result->fetch_assoc();
 
     form.addEventListener('submit', e => {
         e.preventDefault();
-        const newItem = {
-            name: form.name.value,
-            description: form.description.value,
-            price: parseFloat(form.price.value),
-            category: form.category.value,
-            availability: parseInt(form.availability.value)
-        };
-        
+
+        const menuId = form.menu_id.value;
+        const formData = new FormData(form);
+
+        formData.append('action', menuId ? 'update' : 'add');
+
+        if (menuId) {
+            formData.append('menu_id', menuId);
+        }
+
         fetch('../api/admin/menu.php', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(newItem)
+            body: formData,
         })
-        .then(async response => {
-            const text = await response.text();
-            try {
-                return JSON.parse(text);
-            } catch (err) {
-                console.error("Invalid JSON returned from server:", text);
-                throw new Error("Failed to parse JSON");
-            }
+        .then(res => res.json())
+        .then(res => {
+            console.log(res.message);
+            form.reset();
+            document.getElementById('menuFormSubmit').innerText = 'Add';
+            loadMenu();
         })
-
-        .then(() => {
-            form.reset(); 
-            loadMenu();    
-        })
-        .catch(error => {
-            console.error("Error adding menu item:", error);
-        });
-        });
-
+        .catch(err => console.error('Error:', err));
+    });
 
     function deleteItem(id) {
         if (confirm("Are you sure you want to delete this menu item?")) {
@@ -308,47 +299,9 @@ $user = $result->fetch_assoc();
         document.getElementById('category').value = category;
         document.getElementById('availability').value = availability;
 
-        document.getElementById('menuId').value = menu_id;
+        document.getElementById('menuId').value = id;
 
         document.getElementById('menuFormSubmit').innerText = 'Edit';
-    }
-
-    function saveMenuItem(event) {
-        event.preventDefault();
-
-        const formData = new FormData(document.getElementById('menuForm'));
-
-        const menuId = document.getElementById('menuId').value;
-        
-        const data = {
-            name: formData.get('name'),
-            description: formData.get('description'),
-            price: formData.get('price'),
-            category: formData.get('category'),
-            availability: formData.get('availability'),
-            menu_id: menuId, 
-        };
-
-        const url = menuId ? '../api/admin/menu.php' : '../api/admin/menu.php'; 
-
-        fetch(url, {
-            method: menuId ? 'PUT' : 'POST', 
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message === 'Menu item updated' || data.message === 'Menu item added') {
-                loadMenu(); 
-            } else {
-                console.log('Error:', data);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
     }
 
     loadMenu();

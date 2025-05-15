@@ -5,7 +5,7 @@ header("Content-Type: application/json");
 //view orders
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $orders = [];
-    $result = $conn->query("SELECT * FROM orders WHERE status != 'completed' ORDER BY created_at DESC");
+    $result = $conn->query("SELECT * FROM orders ORDER BY order_id ASC");
 
     while ($order = $result->fetch_assoc()) {
         $order_id = $order['order_id'];
@@ -23,11 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         $items = [];
         while ($item = $items_result->fetch_assoc()) {
-            $items[] = $item;
+            if (!empty($item['name']) && $item['quantity'] > 0) {
+                $items[] = $item;
+            }
         }
 
-        $order['items'] = $items;
-        $orders[] = $order;
+        if (!empty($items)) {
+            $order['items'] = $items;
+            $orders[] = $order;
+        }
     }
 
     echo json_encode(['orders' => $orders]);

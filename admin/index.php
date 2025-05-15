@@ -17,6 +17,30 @@ $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
+
+// Total customers
+$result = $conn->query("SELECT COUNT(*) FROM users WHERE role = 'customer'");
+$totalCustomers = $result->fetch_row()[0];
+
+// Total orders
+$result = $conn->query("SELECT COUNT(*) FROM orders");
+$totalOrders = $result->fetch_row()[0];
+
+// Orders this month
+$result = $conn->query("SELECT COUNT(*) FROM orders WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())");
+$monthlyOrders = $result->fetch_row()[0];
+
+// Orders this year
+$result = $conn->query("SELECT COUNT(*) FROM orders WHERE YEAR(created_at) = YEAR(CURRENT_DATE())");
+$yearlyOrders = $result->fetch_row()[0];
+
+// Revenue this month
+$result = $conn->query("SELECT SUM(total_price) FROM orders WHERE MONTH(created_at) = MONTH(CURRENT_DATE()) AND YEAR(created_at) = YEAR(CURRENT_DATE())");
+$monthlyRevenue = $result->fetch_row()[0] ?? 0;
+
+// Revenue this year
+$result = $conn->query("SELECT SUM(total_price) FROM orders WHERE YEAR(created_at) = YEAR(CURRENT_DATE())");
+$yearlyRevenue = $result->fetch_row()[0] ?? 0;
 ?>
 
 <!DOCTYPE html>
@@ -91,9 +115,9 @@ $user = $result->fetch_assoc();
 
         /* Main Content */
         .main-content {
-            margin-left: 250px;
+            margin-left: 100%;
             padding: 30px;
-            width: calc(100% - 270px);
+            width: 100%;
             min-height: 100vh;
             background-color: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
@@ -122,13 +146,34 @@ $user = $result->fetch_assoc();
             line-height: 1.6;
         }
 
-        /* Image Styling */
-        .image-item {
-            width: 100%;
-            max-width: 400px;
-            height: auto;
-            object-fit: cover;
-            margin-top: 20px;
+        #dashboard-overview {
+            margin-top: 30px;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 24px;
+            font-weight: bold;
+            color: #27ae60;
         }
 
         /* Adjustments for Small Screens (Mobile Devices) */
@@ -178,12 +223,6 @@ $user = $result->fetch_assoc();
                     </a>
                 </li>
                 <li>
-                    <a href="#cart">
-                        <i class="fas fa-shopping-cart nav-icon"></i>
-                        Manage Customer Cart
-                    </a>
-                </li>
-                <li>
                     <a href="logout.php">Logout</a>
                 </li>
             </ul>
@@ -194,18 +233,32 @@ $user = $result->fetch_assoc();
                 <h2>Welcome, <?php echo htmlspecialchars($user['email']); ?>!</h2>
             </header>
 
-            <section id="main-message">
-                <h3>Hungry? Let the Tiger Deliver!</h3>
-                <p>Browse menus, order in minutes, and enjoy food delivered right to your door.</p>
-            </section>
-
-            <!-- Image Section -->
-            <section id="image-gallery">
-                <div class="image-container">
-                    <img src="../assets/images/burger.png" alt="Image 1" class="image-item">
-                    <img src="../assets/images/pizza.png" alt="Image 2" class="image-item">
-                    <img src="../assets/images/fries.png" alt="Image 3" class="image-item">
-                    <img src="../assets/images/chicken.png" alt="Image 4" class="image-item">
+            <section id="dashboard-overview">
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <h3>Total Customers</h3>
+                        <p><?php echo $totalCustomers; ?></p>
+                    </div>
+                    <div class="card">
+                        <h3>Total Orders</h3>
+                        <p><?php echo $totalOrders; ?></p>
+                    </div>
+                    <div class="card">
+                        <h3>Orders This Month</h3>
+                        <p><?php echo $monthlyOrders; ?></p>
+                    </div>
+                    <div class="card">
+                        <h3>Orders This Year</h3>
+                        <p><?php echo $yearlyOrders; ?></p>
+                    </div>
+                    <div class="card">
+                        <h3>Revenue This Month</h3>
+                        <p>₱<?php echo number_format($monthlyRevenue, 2); ?></p>
+                    </div>
+                    <div class="card">
+                        <h3>Revenue This Year</h3>
+                        <p>₱<?php echo number_format($yearlyRevenue, 2); ?></p>
+                    </div>
                 </div>
             </section>
         </main>

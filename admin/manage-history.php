@@ -177,12 +177,6 @@ $user = $result->fetch_assoc();
                     </a>
                 </li>
                 <li>
-                    <a href="#cart">
-                        <i class="fas fa-shopping-cart nav-icon"></i>
-                        Manage Customer Cart
-                    </a>
-                </li>
-                <li>
                     <a href="logout.php">Logout</a>
                 </li>
             </ul>
@@ -193,7 +187,7 @@ $user = $result->fetch_assoc();
     <table class="table table-bordered">
       <thead>
         <tr>
-          <th>ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th>
+          <th>ID</th><th>Customer</th><th>Email</th><th>Items</th><th>Quantity</th><th>Status</th><th>Address</th><th>Total</th><th>Date</th>
         </tr>
       </thead>
       <tbody id="historyTable"></tbody>
@@ -210,7 +204,11 @@ $user = $result->fetch_assoc();
             <tr>
                 <td>${order.id}</td>
                 <td>${order.customer_name}</td>
+                <td>${order.email}</td>
                 <td>${order.items}</td>
+                <td>${order.quantity}</td>
+                <td>${order.status}</td>
+                <td>${order.address}</td>
                 <td>₱${order.total}</td>
                 <td>${order.created_at}</td>
             </tr>

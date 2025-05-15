@@ -177,12 +177,6 @@ $user = $result->fetch_assoc();
                     </a>
                 </li>
                 <li>
-                    <a href="#cart">
-                        <i class="fas fa-shopping-cart nav-icon"></i>
-                        Manage Customer Cart
-                    </a>
-                </li>
-                <li>
                     <a href="logout.php">Logout</a>
                 </li>
             </ul>
@@ -258,37 +252,35 @@ $user = $result->fetch_assoc();
 
     form.addEventListener('submit', e => {
         e.preventDefault();
-        const newItem = {
+
+        const menuId = form.menu_id.value;
+        const data = {
             name: form.name.value,
             description: form.description.value,
             price: parseFloat(form.price.value),
             category: form.category.value,
-            availability: parseInt(form.availability.value)
+            availability: parseInt(form.availability.value),
+            action: menuId ? 'update' : 'add' 
         };
-        
+
+        if (menuId) {
+            data.menu_id = parseInt(menuId);
+        }
+
         fetch('../api/admin/menu.php', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(newItem)
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
         })
-        .then(async response => {
-            const text = await response.text();
-            try {
-                return JSON.parse(text);
-            } catch (err) {
-                console.error("Invalid JSON returned from server:", text);
-                throw new Error("Failed to parse JSON");
-            }
+        .then(res => res.json())
+        .then(res => {
+            console.log(res.message);
+            form.reset();
+            document.getElementById('menuFormSubmit').innerText = 'Add';
+            loadMenu();
         })
-
-        .then(() => {
-            form.reset(); 
-            loadMenu();    
-        })
-        .catch(error => {
-            console.error("Error adding menu item:", error);
-        });
-        });
+        .catch(err => console.error('Error:', err));
+    });
 
 
     function deleteItem(id) {
@@ -308,47 +300,9 @@ $user = $result->fetch_assoc();
         document.getElementById('category').value = category;
         document.getElementById('availability').value = availability;
 
-        document.getElementById('menuId').value = menu_id;
+        document.getElementById('menuId').value = id;
 
         document.getElementById('menuFormSubmit').innerText = 'Edit';
-    }
-
-    function saveMenuItem(event) {
-        event.preventDefault();
-
-        const formData = new FormData(document.getElementById('menuForm'));
-
-        const menuId = document.getElementById('menuId').value;
-        
-        const data = {
-            name: formData.get('name'),
-            description: formData.get('description'),
-            price: formData.get('price'),
-            category: formData.get('category'),
-            availability: formData.get('availability'),
-            menu_id: menuId, 
-        };
-
-        const url = menuId ? '../api/admin/menu.php' : '../api/admin/menu.php'; 
-
-        fetch(url, {
-            method: menuId ? 'PUT' : 'POST', 
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message === 'Menu item updated' || data.message === 'Menu item added') {
-                loadMenu(); 
-            } else {
-                console.log('Error:', data);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
     }
 
     loadMenu();

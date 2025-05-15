@@ -177,12 +177,6 @@ $user = $result->fetch_assoc();
                     </a>
                 </li>
                 <li>
-                    <a href="#cart">
-                        <i class="fas fa-shopping-cart nav-icon"></i>
-                        Manage Customer Cart
-                    </a>
-                </li>
-                <li>
                     <a href="logout.php">Logout</a>
                 </li>
             </ul>
@@ -210,12 +204,29 @@ $user = $result->fetch_assoc();
       fetch('../api/admin/orders.php')
         .then(res => res.json())
         .then(data => {
+          console.log(data.orders);
           const table = document.getElementById('orderTable');
           table.innerHTML = '';
+
           data.orders.forEach(order => {
-            const itemsHTML = order.items.map(item => `
+            console.log('Order ID:', order.order_id, 'Items:', order.items);
+
+            const filteredItems = order.items.filter(item => item.name && item.quantity > 0);
+
+            const itemsHTML = filteredItems.map(item => `
               <div>${item.name} x${item.quantity} - ₱${item.price}</div>
             `).join('');
+
+            const isCompleted = order.status === 'completed';
+
+            let statusClass = '';
+              if (order.status === 'completed') {
+                statusClass = 'bg-success text-white'; 
+              } else if (order.status === 'preparing') {
+                statusClass = 'bg-warning text-dark'; 
+              } else {
+                statusClass = 'bg-secondary text-white'; 
+              }
 
             table.innerHTML += `
               <tr>
@@ -223,10 +234,22 @@ $user = $result->fetch_assoc();
                 <td>${order.user_id}</td>
                 <td>${itemsHTML}</td>
                 <td>₱${order.total_price}</td>
-                <td>${order.status}</td>
                 <td>
-                  <button class="btn btn-success btn-sm" onclick="updateStatus(${order.order_id}, 'preparing')">Preparing</button>
-                  <button class="btn btn-primary btn-sm" onclick="updateStatus(${order.order_id}, 'completed')">Complete</button>
+                  <span class="badge ${statusClass} px-3 py-2 rounded-pill" style="font-size: 0.9rem;">
+                    ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn btn-primary btn-sm" 
+                          onclick="updateStatus(${order.order_id}, 'preparing')" 
+                          ${isCompleted ? 'disabled' : ''}>
+                    Preparing
+                  </button>
+                  <button class="btn btn-warning btn-sm" 
+                          onclick="updateStatus(${order.order_id}, 'completed')" 
+                          ${isCompleted ? 'disabled' : ''}>
+                    Complete
+                  </button>
                 </td>
               </tr>
             `;

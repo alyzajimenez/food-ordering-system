@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #ffecd2, #fcb69f);
+            background-color:rgb(207, 132, 92);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .logo-container img {
-            width: 100px; /* Adjust size as needed */
+            width: 100px; 
             margin-bottom: 20px;
         }
 
@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <div class="register-container">
         <div class="logo-container">
-            <img src="../assets/images/logo.png" alt="Logo"> <!-- Replace with your logo path -->
+            <img src="../assets/images/logo.png" alt="Logo"> 
         </div>
 
         <h2>Customer Registration</h2>

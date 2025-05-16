@@ -62,8 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right,rgb(233, 141, 3), #ACB6E5);
-            display: flex;
+            background-color: #d65108;            display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -117,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             width: 100%;
             padding: 12px;
             margin-top: 15px;
-            background-color: #4A90E2;
+            background-color: #d65108;
             color: #fff;
             border: none;
             border-radius: 6px;

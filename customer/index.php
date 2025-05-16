@@ -29,40 +29,37 @@ $user = $result->fetch_assoc();
     <style>
 /* Global Styles */
 body {
-    background-size: cover;
-    background-position: center;
-    min-height: 100vh;
     margin: 0;
     font-family: 'Roboto', sans-serif;
     color: #333;
     display: flex;
-    flex-direction: row; 
-    overflow-x: hidden; 
+    flex-direction: row;
+    overflow-x: hidden;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-image: url('../assets/images/orange.jpg'); 
 }
+
 /* Sidebar */
 .sidebar {
-    width: 250px; 
-    background-color:rgb(119, 79, 19);
-    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    background-color: #d65108;
+    color: #fff;
     position: fixed;
-    height: 100vh; 
     top: 0;
     left: 0;
-    z-index: 10; 
-    text-align: center;
+    height: 100%;
+    padding: 20px 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Logo Styling */
 .sidebar .logo {
-    width: 150px; 
-    height: auto;
-    margin-bottom: 30px;
+    width: 150px;
+    margin: 0 auto;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
 }
 
-/* Sidebar Links */
 .sidebar ul {
     list-style: none;
     padding: 0;
@@ -74,79 +71,22 @@ body {
 }
 
 .sidebar ul li a {
-    color: #ecf0f1;
+    color: #fff;
     text-decoration: none;
     font-size: 18px;
     display: block;
-    padding: 10px;
+    padding: 10px 20px;
     border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
 .sidebar ul li a:hover {
-    background-color: #3498db;
+    background-color: #b54507;
 }
 
-/* Main Content */
+
 .main-content {
-    margin-left: 250px; 
-    padding: 30px;
-    width: calc(100% - 270px); 
-    min-height: 100vh; 
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-}
-
-/* Main Header */
-header h2 {
-    font-size: 28px;
-    margin-bottom: 20px;
-    color: #34495e;
-}
-
-/* Main Message Section */
-#main-message h3 {
-    font-size: 36px;
-    color: #2c3e50;
-    margin-top: 20px;
-}
-
-#main-message p {
-    font-size: 18px;
-    color: #7f8c8d;
-    margin-top: 10px;
-    line-height: 1.6;
-}
-
-/* Image Styling */
-.image-item {
-    width: 100%;
-    max-width: 400px;
-    height: auto;
-    object-fit: cover;
-    margin-top: 20px;
-}
-
-/* Adjustments for Small Screens (Mobile Devices) */
-@media (max-width: 768px) {
-    body {
-        flex-direction: column; 
-    }
-
-    .sidebar {
-        width: 100%; 
-        position: static; 
-        border-radius: 0;
-        box-shadow: none;
-    }
-
-    .main-content {
-        margin-left: 0; 
-        width: 100%; 
-        padding: 20px;
-    }
+    display: none; 
 }
 
     </style>
@@ -186,29 +126,5 @@ header h2 {
                 <li><a href="logout.php">Logout</a></li>
             </ul>
         </nav>
-
- <main class="main-content">
-    <header>
-        <h2>Welcome, <?php echo htmlspecialchars($user['email']); ?>!</h2>
-    </header>
-
-    <section id="main-message">
-        <h3>Hungry? Let the Tiger Deliver!</h3>
-        <p>Browse menus, order in minutes, and enjoy food delivered right to your door.</p>
-    </section>
-    
-     <!-- Image Section -->
-    <section id="image-gallery">
-        <div class="image-container">
-            <img src="../assets/images/burger.png" alt="Image 1" class="image-item">
-            <img src="../assets/images/pizza.png" alt="Image 2" class="image-item">
-            <img src="../assets/images/fries.png" alt="Image 3" class="image-item">
-            <img src="../assets/images/chicken.png" alt="Image 4" class="image-item">
-        </div>
-    </section>
-</main>
-
-    </div>
-
 </body>
 </html>

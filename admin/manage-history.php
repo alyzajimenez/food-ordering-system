@@ -23,6 +23,7 @@ $user = $result->fetch_assoc();
 <head>
   <meta charset="UTF-8">
   <title>Admin - Order History</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
     <style>
@@ -41,52 +42,60 @@ $user = $result->fetch_assoc();
 
         /* Sidebar */
         .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
-            position: fixed;
-            height: 100vh;
-            top: 0;
-            left: 0;
-            z-index: 10;
-            text-align: center;
-        }
+    width: 250px;
+    background: linear-gradient(to bottom, #2c3e50, #34495e);
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    text-align: center;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+    padding-top: 20px;
+    border-radius: 0 10px 10px 0;
+    transition: width 0.3s ease;
+}
 
-        /* Logo Styling */
-        .sidebar .logo {
-            width: 150px;
-            height: auto;
-            margin-bottom: 30px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
+.sidebar:hover {
+    width: 270px;
+}
 
-        /* Sidebar Links */
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
+.sidebar .logo {
+    width: 150px;
+    height: auto;
+    margin-bottom: 30px;
+    transition: transform 0.3s ease;
+}
 
-        .sidebar ul li {
-            margin: 20px 0;
-            text-align: center;
-        }
+.sidebar .logo:hover {
+    transform: rotate(10deg);
+}
 
-        .sidebar ul li a {
-            color: #ecf0f1;
-            text-decoration: none;
-            font-size: 18px;
-            display: block;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
 
-        .sidebar ul li a:hover {
-            background-color: #3498db;
-        }
+.sidebar ul li {
+    margin: 20px 0;
+    text-align: center;
+}
 
+.sidebar ul li a {
+    color: #ecf0f1;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.sidebar ul li a:hover {
+    background-color: #3498db;
+    color: white;
+    transform: translateX(10px);
+}
         /* Main Content */
         .main-content {
             margin-left: 250px;
@@ -129,7 +138,6 @@ $user = $result->fetch_assoc();
             margin-top: 20px;
         }
 
-        /* Adjustments for Small Screens (Mobile Devices) */
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
@@ -177,7 +185,9 @@ $user = $result->fetch_assoc();
                     </a>
                 </li>
                 <li>
-                    <a href="logout.php">Logout</a>
+                    <a href="logout.php">
+                        <i class="fas fa-sign-out-alt nav-icon"> </i>
+                        Logout</a>
                 </li>
             </ul>
         </nav>
